@@ -153,5 +153,200 @@ namespace RPGHeroesAssignment.RPGCharacters.Game
             DisplayTip();
         }
 
+        /// <summary>
+        /// Displays weapon shop menu, where player can pick a weapon to equip.
+        /// Player can't equip unfamiliar weapon type or high level weapon.
+        /// </summary>
+        private void DisplayWeaponShop()
+        {
+            Weapon[] weapons = new[]
+            {
+            // Axes
+            new Weapon("Old axe", 1, SlotType.Weapon, WeaponType.Axe, 15, 1.0),
+            new Weapon("Rare axe", 5, SlotType.Weapon, WeaponType.Axe, 25, 0.9),
+            new Weapon("Enchanted axe", 9, SlotType.Weapon, WeaponType.Axe, 35, 0.8),
+
+            // Bows
+            new Weapon("Old bow", 1, SlotType.Weapon, WeaponType.Bow, 20, 1.0),
+            new Weapon("Rare bow", 5, SlotType.Weapon, WeaponType.Bow, 30, 1.5),
+            new Weapon("Enchanted bow", 9, SlotType.Weapon, WeaponType.Bow, 40, 2.0),
+
+            // Daggers
+            new Weapon("Old dagger", 1, SlotType.Weapon, WeaponType.Dagger, 10, 2.0),
+            new Weapon("Rare dagger", 5, SlotType.Weapon, WeaponType.Dagger, 15, 2.5),
+            new Weapon("Enchanted dagger", 9, SlotType.Weapon, WeaponType.Dagger, 20, 3.0),
+
+            // Hammers
+            new Weapon("Old hammer", 1, SlotType.Weapon, WeaponType.Hammer, 30, 0.6),
+            new Weapon("Rare hammer", 5, SlotType.Weapon, WeaponType.Hammer, 45, 0.7),
+            new Weapon("Enchanted hammer", 9, SlotType.Weapon, WeaponType.Hammer, 60, 0.75),
+
+            // Staff
+            new Weapon("Old staff", 1, SlotType.Weapon, WeaponType.Staff, 30, 1.0),
+            new Weapon("Rare staff", 5, SlotType.Weapon, WeaponType.Staff, 40, 1.0),
+            new Weapon("Enchanted staff", 9, SlotType.Weapon, WeaponType.Staff, 50, 1.0),
+
+            // Swords
+            new Weapon("Old sword", 1, SlotType.Weapon, WeaponType.Sword, 22, 1.2),
+            new Weapon("Rare sword", 5, SlotType.Weapon, WeaponType.Sword, 42, 1.5),
+            new Weapon("Enchanted sword", 9, SlotType.Weapon, WeaponType.Sword, 62, 2.0),
+
+            // Wand
+            new Weapon("Old wand", 1, SlotType.Weapon, WeaponType.Wand, 9, 2.0),
+            new Weapon("Rare wand", 5, SlotType.Weapon, WeaponType.Wand, 14, 2.5),
+            new Weapon("Enchanted wand", 9, SlotType.Weapon, WeaponType.Wand, 19, 3.0),
+        };
+
+            string promt = "This is the WEAPON SHOP!\n"
+                           + "(Use the arrow keys to cycle through weapons and press ENTER to equip a weapon)\n"
+                           + $"    |{"Name",20}|{"Type",10}|{"LevelRequired",17}|{"Damage",10}|{"AttackSpeed",15}|";
+            string[] options = new string[weapons.Length + 1];
+
+            foreach (var (weapon, index) in weapons.Select((value, index) => (value, index)))
+            {
+                options[index] =
+                    $"|{weapon.Name,20}|{weapon.Type,10}|{weapon.LevelRequired,17}|{weapon.Damage,10}|{weapon.AttackSpeed,15}|";
+            }
+
+            options[weapons.Length] = "Leave the shop";
+            ConsoleMenu weaponShopMenu = new ConsoleMenu(promt, options);
+            int selectedOption = weaponShopMenu.Run();
+            if (selectedOption == weapons.Length)
+            {
+                return;
+            }
+
+            Weapon selectedWeapon = weapons[selectedOption];
+
+            try
+            {
+                PlayerCharacter!.EquipWeapon(selectedWeapon);
+                DisplayInfo($"You equipped {selectedWeapon.Name}! Looks good.");
+            }
+            catch (InvalidWeaponException e)
+            {
+                DisplayInfo(e.Message + $"\nYou can use {string.Join(", ", PlayerCharacter!.AllowedWeaponTypes)}.");
+            }
+            catch (InvalidCharacterLevelException e)
+            {
+                DisplayInfo(e.Message +
+                            $"\nThis weapon has level {selectedWeapon.LevelRequired} and your level is {PlayerCharacter!.Level}. Do some quests to gain level.");
+            }
+
+            DisplayTip();
+            DisplayWeaponShop();
+        }
+
+        /// <summary>
+        /// Displays armor shop menu, where player can pick an armor to equip.
+        /// Player can't equip unfamiliar armor type or high level armor.
+        /// </summary>
+        private void DisplayArmorShop()
+        {
+            Armor[] armors = new[]
+            {
+            // Cloth
+            new Armor("Old hood", 1, SlotType.Head, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 1}),
+            new Armor("Ancient cap", 5, SlotType.Head, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 5}),
+            new Armor("Enchanted hat", 9, SlotType.Head, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 9}),
+
+            new Armor("Old dress", 1, SlotType.Body, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 1}),
+            new Armor("Ancient mantle", 5, SlotType.Body, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 5}),
+            new Armor("Enchanted robe", 9, SlotType.Body, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 9}),
+
+            new Armor("Old pants", 1, SlotType.Legs, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 1}),
+            new Armor("Ancient pants", 5, SlotType.Legs, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 5}),
+            new Armor("Enchanted pants", 9, SlotType.Legs, ArmorType.Cloth, new PrimaryAttributes() {Intelligence = 9}),
+
+            // Leather
+            new Armor("Rawhide hood", 1, SlotType.Head, ArmorType.Leather, new PrimaryAttributes() {Dexterity = 2}),
+            new Armor("Elven hood", 5, SlotType.Head, ArmorType.Leather, new PrimaryAttributes() {Dexterity = 6}),
+            new Armor("Enchanted dragon hood", 9, SlotType.Head, ArmorType.Leather,
+                new PrimaryAttributes() {Dexterity = 10}),
+
+            new Armor("Rawhide chest", 1, SlotType.Body, ArmorType.Leather, new PrimaryAttributes() {Dexterity = 2}),
+            new Armor("Elven sorcerer chest", 5, SlotType.Body, ArmorType.Leather,
+                new PrimaryAttributes() {Dexterity = 6}),
+            new Armor("Enchanted dragon chest", 9, SlotType.Body, ArmorType.Leather,
+                new PrimaryAttributes() {Dexterity = 10}),
+
+            new Armor("Rawhide pants", 1, SlotType.Legs, ArmorType.Leather, new PrimaryAttributes() {Dexterity = 2}),
+            new Armor("Elven pants", 5, SlotType.Legs, ArmorType.Leather, new PrimaryAttributes() {Dexterity = 6}),
+            new Armor("Enchanted dragon pants", 9, SlotType.Legs, ArmorType.Leather,
+                new PrimaryAttributes() {Dexterity = 10}),
+
+            // Mail
+            new Armor("Copper hood", 1, SlotType.Head, ArmorType.Mail, new PrimaryAttributes() {Dexterity = 3}),
+            new Armor("Iron hood", 5, SlotType.Head, ArmorType.Mail, new PrimaryAttributes() {Dexterity = 7}),
+            new Armor("Enchanted steel hood", 9, SlotType.Head, ArmorType.Mail,
+                new PrimaryAttributes() {Dexterity = 11}),
+
+            new Armor("Copper chest", 1, SlotType.Body, ArmorType.Mail, new PrimaryAttributes() {Dexterity = 3}),
+            new Armor("Iron chest", 5, SlotType.Body, ArmorType.Mail, new PrimaryAttributes() {Dexterity = 7}),
+            new Armor("Enchanted steel chest", 9, SlotType.Body, ArmorType.Mail,
+                new PrimaryAttributes() {Dexterity = 11}),
+
+            new Armor("Copper pants", 1, SlotType.Legs, ArmorType.Mail, new PrimaryAttributes() {Dexterity = 3}),
+            new Armor("Iron pants", 5, SlotType.Legs, ArmorType.Mail, new PrimaryAttributes() {Dexterity = 7}),
+            new Armor("Enchanted steel pants", 9, SlotType.Legs, ArmorType.Mail,
+                new PrimaryAttributes() {Dexterity = 11}),
+
+            // Plate
+            new Armor("Iron helmet", 1, SlotType.Head, ArmorType.Plate, new PrimaryAttributes() {Strength = 4}),
+            new Armor("Corundum helmet", 5, SlotType.Head, ArmorType.Plate, new PrimaryAttributes() {Strength = 8}),
+            new Armor("Enchanted steel helmet", 9, SlotType.Head, ArmorType.Plate,
+                new PrimaryAttributes() {Strength = 12}),
+
+            new Armor("Iron chest", 1, SlotType.Body, ArmorType.Plate, new PrimaryAttributes() {Strength = 4}),
+            new Armor("Corundum chest", 5, SlotType.Body, ArmorType.Plate, new PrimaryAttributes() {Strength = 8}),
+            new Armor("Enchanted steel chest", 9, SlotType.Body, ArmorType.Plate,
+                new PrimaryAttributes() {Strength = 12}),
+
+            new Armor("Iron pants", 1, SlotType.Legs, ArmorType.Plate, new PrimaryAttributes() {Strength = 4}),
+            new Armor("Corundum pants", 5, SlotType.Legs, ArmorType.Plate, new PrimaryAttributes() {Strength = 8}),
+            new Armor("Enchanted steel pants", 9, SlotType.Legs, ArmorType.Plate,
+                new PrimaryAttributes() {Strength = 12}),
+        };
+
+            string promt = "Welcome to the ARMOR SHOP!\n"
+                           + "(Use the arrow keys to cycle through armors and press ENTER to equip an armor)\n"
+                           + $"    |{"Name",25}|{"Type",10}|{"Slot",10}|{"LevelRequired",17}|{"Strength",13}|{"Dexterity",13}|{"Intelligence",13}|";
+            string[] options = new string[armors.Length + 1];
+
+            foreach (var (armor, index) in armors.Select((value, index) => (value, index)))
+            {
+                options[index] =
+                    $"|{armor.Name,25}|{armor.Type,10}|{armor.Slot,10}|{armor.LevelRequired,17}|{armor.Attributes.Strength,13}|{armor.Attributes.Dexterity,13}|{armor.Attributes.Intelligence,13}|";
+            }
+
+            options[armors.Length] = "Leave the shop";
+            ConsoleMenu armorShopMenu = new ConsoleMenu(promt, options);
+            int selectedOption = armorShopMenu.Run();
+            if (selectedOption == armors.Length)
+            {
+                return;
+            }
+
+            Armor selectedArmor = armors[selectedOption];
+
+            try
+            {
+                PlayerCharacter!.EquipArmor(selectedArmor);
+                DisplayInfo($"You equipped {selectedArmor.Name}! Looks good.");
+            }
+            catch (InvalidArmorException e)
+            {
+                DisplayInfo(e.Message + $"\nYou can use {string.Join(", ", PlayerCharacter!.AllowedArmorTypes)}.");
+            }
+            catch (InvalidCharacterLevelException e)
+            {
+                DisplayInfo(e.Message +
+                            $"\nThis armor has level {selectedArmor.LevelRequired} and your level is {PlayerCharacter!.Level}. Do some quests to gain level.");
+            }
+
+            DisplayTip();
+            DisplayArmorShop();
+        }
+
     }
 }
