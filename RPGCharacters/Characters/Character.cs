@@ -19,7 +19,7 @@ namespace RPGHeroesAssignment.RPGCharacters.Characters
         public PrimaryAttributes TotalPrimaryAttributes => CalculateTotalAttributes();
         public readonly List<ArmorType> AllowedArmorTypes = new List<ArmorType>();
         public readonly List<WeaponType> AllowedWeaponTypes = new List<WeaponType>();
-        public const double BaseDamage = 1.0;
+        protected const double baseDamage = 1.0;
 
         public Dictionary<SlotType, Item?> Equipment { get; } = new()
     {

@@ -32,7 +32,7 @@ public class Warrior : Character
     public override double CalculateDamage()
     {
         Weapon? equippedWeapon = (Weapon?)Equipment[SlotType.Weapon];
-        double damagePerSecond = equippedWeapon?.GetDamagePerSecond() ?? BaseDamage;
+        double damagePerSecond = equippedWeapon?.GetDamagePerSecond() ?? baseDamage;
 
         return damagePerSecond * (1 + (double)TotalPrimaryAttributes.Strength / 100);
     }
