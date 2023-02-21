@@ -17,7 +17,7 @@ public class Gamestart
     /// <summary>
     /// Starts the game script:
     /// <list type="bullet">
-    /// <item><description>Firstly player see the main menu.</description></item>
+    /// <item><description>the First thing the player see the main menu.</description></item>
     /// <item><description>If player pressed "Play", script goes to create character script. Where player can choose the type of the character</description></item>
     /// <item><description>Then player must pick a name for the character.</description></item>
     /// <item><description>Finally, player begins their story where they can "Do a quest", "Visit an armor shop", "Visit an weapon shop", "Check your stats", "Check your equipment","Exit game"</description></item>
@@ -59,6 +59,9 @@ public class Gamestart
         }
     }
 
+    /// <summary>
+    /// This method exits the game and shows a farewell message. 
+    /// </summary>
     private void ExitGame()
     {
         DisplayInfo("Thank you for this time! Until next time!");
